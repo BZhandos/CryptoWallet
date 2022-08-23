@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "available": "1.003000000",
+    "total": "1.203000000",
+    "value": "76107.77",
+    "fee": "0.0004",
+    "isWithdrawable": true,
+    "fiat": {
+      "icon": "BTC",
+      "full_name": "Bitcoin",
+      "short_name": "BTC",
+      "id": 1
+    }
+  },
+  {
+    "id": 2,
+    "available": "3.123456780000000000",
+    "total": "3.123456780000000000",
+    "value": "13565.48",
+    "fee": "0.0003",
+    "isWithdrawable": true,
+    "fiat": {
+      "icon": "ETH",
+      "full_name": "Ethereum",
+      "short_name": "ETH",
+      "id": 2
+    }
+  },
+  {
+    "id": 3,
+    "available": "1.240000000",
+    "total": "1240.000000",
+    "value": "13565.48",
+    "fee": "0.0002",
+    "isWithdrawable": false,
+    "fiat": {
+      "icon": "XRP",
+      "full_name": "Ripple",
+      "short_name": "XRP",
+      "id": 3
+    }
+  }
+]
