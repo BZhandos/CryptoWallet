@@ -3,7 +3,7 @@
     <div class="wallet-wrap__header">
       <h1>Wallets</h1>
       <div class="search-label">
-        <input class="search-label__input" placeholder="Search" v-model="search" @input="searchHandler" />
+        <input class="search-label__input" placeholder="Search" v-model="search" />
         <div class="search-label__icon">
           <IconSearch />
         </div>
@@ -18,7 +18,6 @@
           <th>Value (AUD)</th>
           <th></th>
         </tr>
-        <template v-if="search && filteredWalletList.length">
             <tr v-for="item in filteredWalletList" :key="item.fiat.id">
               <td>
                 <SingleCrypto :cryptoInfo="item.fiat"/>
@@ -38,28 +37,6 @@
                         @click="withdrawClick(item.id)"> Withdraw </button>
               </td>
             </tr>
-        </template>
-        <template v-if="!search">
-          <tr v-for="item in walletList" :key="item.fiat.id">
-            <td>
-              <SingleCrypto :cryptoInfo="item.fiat"/>
-            </td>
-            <td>
-              <LongAmount :value="item.available"/>
-            </td>
-            <td>
-              <LongAmount :value="item.total"/>
-            </td>
-            <td>
-              <LongAmount :value="item.value" :withZeros="false" :sign="'$'"/>
-            </td>
-            <td :class="{'active': item.isWithdrawable}">
-              <button class="wallet-action"
-                      :disabled="!item.isWithdrawable"
-                      @click="withdrawClick(item.id)"> Withdraw </button>
-            </td>
-          </tr>
-        </template>
       </table>
       <template v-if="search && filteredWalletList.length===0">
         <div class="empty-info">Not found by search "<code>{{search}}</code>"</div>
@@ -71,7 +48,7 @@
 
 <script setup lang="ts">
 import IconSearch from '@/components/icons/IconSearch.vue'
-import {onMounted, ref} from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import type { IWalletItem } from "@/api/@types/Wallet.type";
 import { useRouter } from "vue-router";
 import { useWalletStore } from "@/stores/wallet";
@@ -84,10 +61,16 @@ const router = useRouter();
 
 const walletStore = useWalletStore();
 const walletList = ref<IWalletItem[]>([])
-const filteredWalletList = ref<IWalletItem[]>([])
 const search = ref<string>('')
 
-
+const filteredWalletList = computed((): IWalletItem[] => {
+  return walletList.value.filter((item) => {
+    if (didSearchFind(item.fiat.short_name,search.value) ||
+        didSearchFind(item.fiat.full_name, search.value)) {
+      return item
+    }
+  })
+})
 onMounted(() => {
   initialize()
 })
@@ -99,16 +82,6 @@ async function initialize() {
   } catch (err: any) {
     console.log(err)
   }
-}
-
-function searchHandler() {
-  filteredWalletList.value = walletList.value.filter((item) => {
-    if (didSearchFind(item.fiat.short_name,search.value) ||
-        didSearchFind(item.fiat.full_name, search.value)) {
-      return item
-    }
-  })
-  return filteredWalletList.value
 }
 
 function didSearchFind(text: string, fraction: string) : boolean {
